@@ -1,0 +1,147 @@
+
+#include <windows.h> 
+#include <windowsx.h> 
+#include <stdio.h> 
+#include <conio.h> 
+#include < math.h > 
+#include <iostream>
+#include <fstream>
+#include <locale.h> 
+#include "Header.h"
+
+
+
+
+int Ren::check_enclosure(int x1, int x2, int y1, int y2, int x3, int y3, int x4, int y4)
+{
+	if (x1 <= x3 && x2 >= x4 && y1 <= y3 && y2 >= y4 && x3<x2 && x4>x1 && y3<y2 && y4>y1)
+			return 1;
+		else return 0;
+}
+
+int Ren::check_size(int x1, int x2, int y1, int y2,HWND hwnd)
+{
+	    RECT rt;
+		GetClientRect(hwnd, &rt);
+		int maxX = rt.right, maxY = rt.bottom;
+		if (x1 < maxX && y1 < maxY)
+		{
+			if (x2 <= maxX &&y2 <= maxY)
+				return 1; else return 0;
+		}
+		else return 0;
+}
+
+void Ren::set_type_pen(int k, int t, int cp1, int cp2, int cp3,HDC hdc)
+{
+	HPEN hPen = CreatePen(PS_SOLID, t, RGB(cp1, cp2, cp3));
+		HPEN hOldPen = hOldPen = SelectPen(hdc, hPen);
+		if (k == 1)
+		{
+			hPen = CreatePen(PS_SOLID, t, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+		if (k == 2)
+		{
+			hPen = CreatePen(PS_DASH, 1, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+		if (k == 3)
+		{
+			hPen = CreatePen(PS_DOT, 1, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+		if (k == 4)
+		{
+			hPen = CreatePen(PS_DASHDOT, 1, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+		if (k == 5)
+		{
+			hPen = CreatePen(PS_DASHDOTDOT, 1, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+		if (k == 6)
+		{
+			hPen = CreatePen(PS_NULL, t, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+	
+		if (k == 7)
+		{
+			hPen = CreatePen(PS_INSIDEFRAME, t, RGB(cp1, cp2, cp3)); hOldPen = SelectPen(hdc, hPen);
+		}
+}
+
+void Ren::set_type_brush(int j, int cb1, int cb2, int cb3,HDC hdc)
+{
+	HBRUSH hBrush = CreateHatchBrush(HS_BDIAGONAL, RGB(cb1, cb2, cb3));
+		HBRUSH hOldBrush = SelectBrush(hdc, hBrush);
+		if (j == 1)
+		{
+			hBrush = CreateHatchBrush(HS_BDIAGONAL, RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+	
+		if (j == 2)
+		{
+			hBrush = CreateHatchBrush(HS_CROSS, RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+	
+		if (j == 3)
+		{
+			hBrush = CreateHatchBrush(HS_DIAGCROSS, RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+	
+		if (j == 4)
+		{
+			hBrush = CreateHatchBrush(HS_FDIAGONAL, RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+	
+		if (j == 5)
+		{
+			hBrush = CreateHatchBrush(HS_HORIZONTAL, RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+	
+		if (j == 6)
+		{
+			hBrush = CreateHatchBrush(HS_VERTICAL, RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+		if (j == 7)
+		{
+			hBrush = CreateSolidBrush(RGB(cb1, cb2, cb3)); hOldBrush = SelectBrush(hdc, hBrush);
+		}
+}
+
+int Ren::check_correct(int x1, int y1, int x2, int y2)
+{
+	if (x1 > 0 && x2 > 0 && y1 > 0 && y2 > 0)
+			{
+				if (x1 != x2 && y1 != y2) return 1; else return 0;
+			}
+			else return 0;
+}
+
+void Ren::paint(int x1, int y1, int x2, int y2, HDC hdc)
+{
+	    SetBkColor(hdc, RGB(0, 0, 0));
+		Rectangle(hdc, x1, y1, x2, y2);
+}
+
+void Ren::set_coordinate(int a1, int b1, int a2, int b2)
+{
+	x1 = a1; x2 = a2; y1 = b1; y2 = b2;
+}
+
+void Ren::set_enccoordinate(int a1, int b1, int a2, int b2)
+{
+	x3 = a1; x4 = a2; y3 = b1; y4 = b2;
+}
+
+void Ren::load(char*str)
+{
+	FILE*f;
+	fopen_s(&f, str, "r");
+	fscanf_s(f, "%d%d %d%d %d%d %d%d%d", &x1, &y1, &x2, &y2, &k, &t, &cp1, &cp2, &cp3) != EOF;
+	set_coordinate(x1, y1, x2, y2);
+	//cделать в классе для цветов
+
+}
+
+void Ren::get_coordinate(int*a1, int*b1, int*a2, int*b2)
+{
+	*a1 = x1; *b1 = y1; *a2 = x2; *b2 = y2;
+}
